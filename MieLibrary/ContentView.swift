@@ -33,15 +33,21 @@ struct ContentView: View {
                             alignment: .center,
                             spacing: 8,
                             content: {
-                                ForEach(0..<50, id: \.self) { id in
-                                    let bookNumber = id.quotientAndRemainder(dividingBy: 5).1
+                                ForEach(0..<47, id: \.self) { _ in
+                                    let bookNumber = Int.random(in: 0...4)
                                     Image("Test Book \(bookNumber)")
                                         .resizable()
                                         .scaledToFit()
                                 }
                             })
                         .padding(8)
+                        
+                        Text("47 Books")
+                            .font(.headline)
+                            .foregroundStyle(Color.tertiary)
+                            .padding(.bottom, 8)
                     }
+                    .background(Color.background)
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
