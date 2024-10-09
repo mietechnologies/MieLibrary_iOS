@@ -13,25 +13,42 @@ struct ContentView: View {
     @Query private var items: [Item]
     
     init() {
-        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: Color.white]
-        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: Color.white]
+        let tabAppearance = UITabBarAppearance()
+        tabAppearance.configureWithTransparentBackground()
+        tabAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.text]
+        tabAppearance.stackedLayoutAppearance.normal.iconColor = .text
+        tabAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.highlight]
+        tabAppearance.stackedLayoutAppearance.selected.iconColor = .highlight
+        UITabBar.appearance().standardAppearance = tabAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabAppearance
+        UITabBar.appearance().barTintColor = .main
+        UITabBar.appearance().backgroundColor = .main
+        
+        let navAppearance = UINavigationBarAppearance()
+        navAppearance.configureWithTransparentBackground()
+        navAppearance.backgroundColor = .main
+        navAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.text]
+        navAppearance.titleTextAttributes = [.foregroundColor: UIColor.text]
+        UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
+        UINavigationBar.appearance().standardAppearance = navAppearance
+        
     }
 
     var body: some View {
         TabView {
             Tab("Home", systemImage: "books.vertical.fill") {
-                NavigationSplitView {
+                NavigationSplitView { // TODO: Update this to a NavigationStack
                     ScrollView {
                         LazyVGrid(
                             columns: [
-                                .init(.flexible(), spacing: 8, alignment: .center),
-                                .init(.flexible(), spacing: 8, alignment: .center),
-                                .init(.flexible(), spacing: 8, alignment: .center),
-                                .init(.flexible(), spacing: 8, alignment: .center),
-                                .init(.flexible(), spacing: 8, alignment: .center)
+                                .init(.flexible(), spacing: 10, alignment: .center),
+                                .init(.flexible(), spacing: 10, alignment: .center),
+                                .init(.flexible(), spacing: 10, alignment: .center),
+                                .init(.flexible(), spacing: 10, alignment: .center),
+                                .init(.flexible(), spacing: 10, alignment: .center)
                             ],
                             alignment: .center,
-                            spacing: 8,
+                            spacing: 10,
                             content: {
                                 ForEach(0..<47, id: \.self) { _ in
                                     let bookNumber = Int.random(in: 0...4)
@@ -53,45 +70,37 @@ struct ContentView: View {
                             Button {
                                 print("Search Tapped")
                             } label: {
-                                Label("Search", systemImage: "magnifyingglass")
-                                    .foregroundStyle(.text, .highlight)
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundStyle(Color.text)
+                                    .accessibilityLabel("Search")
                             }
                         }
                         ToolbarItem {
                             Button(action: addItem) {
-                                Label("Add Item", systemImage: "plus")
-                                    .foregroundStyle(.text, .highlight)
+                                Image(systemName: "plus")
+                                    .foregroundStyle(Color.text)
+                                    .accessibilityLabel("Add Item")
+                                    
                             }
                         }
                     }
                     .navigationTitle("Library")
-                    .toolbarBackgroundVisibility(.visible, for: .navigationBar)
-                    .toolbarBackground(Color.main, for: .navigationBar)
-                    .tabViewStyle(.tabBarOnly)
-                    .toolbarBackgroundVisibility(.visible, for: .tabBar)
-                    .toolbarBackground(Color.main, for: .tabBar)
                 } detail: {
                     Text("Select an item")
                 }
             }
             
             Tab("Settings", systemImage: "gear") {
-                NavigationSplitView {
+                NavigationSplitView { // TODO: Update this to a NavigationStack
                     VStack {
                         Text("Hello")
                     }
                     .navigationTitle("Settings")
-                    .toolbarBackgroundVisibility(.visible, for: .navigationBar)
-                    .toolbarBackground(Color.main, for: .navigationBar)
-                    .tabViewStyle(.tabBarOnly)
-                    .toolbarBackgroundVisibility(.visible, for: .tabBar)
-                    .toolbarBackground(Color.main, for: .tabBar)
                 } detail: {
                     Text("Settings")
                 }
             }
         }
-        .tint(Color.highlight)
     }
 
     private func addItem() {
