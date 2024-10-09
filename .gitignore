@@ -1,0 +1,79 @@
+# macOS specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode specific files
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Xcode build and derived data
+DerivedData/
+Build/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Xcode project workspace settings
+!default.xcworkspace
+xcshareddata/
+!xcshareddata/WorkspaceSettings.xcsettings
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+Carthage/Checkouts/
+Carthage/Packages/
+
+# Swift Package Manager
+Packages/
+.swiftpm/
+.build/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*.lock
+*.xcconfig
+
+# Swift and Obj-C intermediate build files
+*.o
+*.swiftdoc
+*.swiftsourceinfo
+*.swiftmodule
+*.d
+
+# Keychain files
+*.keychain
+
+# Archives
+*.xcarchive
+*.ipa
+
+# Simulator generated files
+profile
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# SPM Packages and Resolved Dependencies
+.swiftpm/
+*.resolved
+
+# Ignore environment variable files
+.env.*
+
