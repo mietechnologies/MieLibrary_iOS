@@ -11,32 +11,81 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
+    
+    init() {
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: Color.white]
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: Color.white]
+    }
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        TabView {
+            Tab("Home", systemImage: "books.vertical.fill") {
+                NavigationSplitView {
+                    ScrollView {
+                        LazyVGrid(
+                            columns: [
+                                .init(.flexible(), spacing: 8, alignment: .center),
+                                .init(.flexible(), spacing: 8, alignment: .center),
+                                .init(.flexible(), spacing: 8, alignment: .center),
+                                .init(.flexible(), spacing: 8, alignment: .center),
+                                .init(.flexible(), spacing: 8, alignment: .center)
+                            ],
+                            alignment: .center,
+                            spacing: 8,
+                            content: {
+                                ForEach(0..<50, id: \.self) { id in
+                                    let bookNumber = id.quotientAndRemainder(dividingBy: 5).1
+                                    Image("Test Book \(bookNumber)")
+                                        .resizable()
+                                        .scaledToFit()
+                                }
+                            })
+                        .padding(8)
                     }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                print("Search Tapped")
+                            } label: {
+                                Label("Search", systemImage: "magnifyingglass")
+                                    .foregroundStyle(.text, .highlight)
+                            }
+                        }
+                        ToolbarItem {
+                            Button(action: addItem) {
+                                Label("Add Item", systemImage: "plus")
+                                    .foregroundStyle(.text, .highlight)
+                            }
+                        }
                     }
+                    .navigationTitle("Library")
+                    .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+                    .toolbarBackground(Color.main, for: .navigationBar)
+                    .tabViewStyle(.tabBarOnly)
+                    .toolbarBackgroundVisibility(.visible, for: .tabBar)
+                    .toolbarBackground(Color.main, for: .tabBar)
+                } detail: {
+                    Text("Select an item")
                 }
             }
-        } detail: {
-            Text("Select an item")
+            
+            Tab("Settings", systemImage: "gear") {
+                NavigationSplitView {
+                    VStack {
+                        Text("Hello")
+                    }
+                    .navigationTitle("Settings")
+                    .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+                    .toolbarBackground(Color.main, for: .navigationBar)
+                    .tabViewStyle(.tabBarOnly)
+                    .toolbarBackgroundVisibility(.visible, for: .tabBar)
+                    .toolbarBackground(Color.main, for: .tabBar)
+                } detail: {
+                    Text("Settings")
+                }
+            }
         }
+        .tint(Color.highlight)
     }
 
     private func addItem() {
