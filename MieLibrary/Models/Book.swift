@@ -9,9 +9,13 @@ import Foundation
 import SwiftData
 
 @Model
-final class Book {
+final class Book: Identifiable {
+    var id: String {
+        guard let subTitle = subTitle else { return title }
+        return "\(title): \(subTitle)"
+    }
     var title: String
-    var subTitle: String
+    var subTitle: String?
     var author: String
     var publisher: String?
     var publishedDate: Date?
@@ -27,7 +31,7 @@ final class Book {
     
     init(
         title: String,
-        subTitle: String,
+        subTitle: String? = nil,
         author: String,
         publisher: String? = nil,
         publishedDate: Date? = nil,
@@ -39,7 +43,7 @@ final class Book {
         bookCover: String? = nil,
         tags: [String],
         dateAdded: Date = Date(),
-        isFavorite: Bool
+        isFavorite: Bool = false
     ) {
         self.title = title
         self.subTitle = subTitle
