@@ -10,7 +10,16 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @State private var searchText: String = ""
     @Query(sort: [SortDescriptor(\Book.title, order: .forward), SortDescriptor(\Book.subTitle, order: .forward)]) private var books: [Book]
+    
+    private var filteredBooks: [Book] {
+        if searchText.isEmpty {
+            return books
+        } else {
+            return books.filter({ $0.search(with: searchText) })
+        }
+    }
     
     init() {
         let tabAppearance = UITabBarAppearance()
@@ -32,6 +41,8 @@ struct ContentView: View {
         UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
         UINavigationBar.appearance().standardAppearance = navAppearance
         
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = .white
+        
     }
 
     var body: some View {
@@ -50,7 +61,7 @@ struct ContentView: View {
                             alignment: .center,
                             spacing: 10,
                             content: {
-                                ForEach(books) { book in
+                                ForEach(filteredBooks) { book in
                                     Image(book.bookCover ?? "No Cover")
                                         .resizable()
                                         .scaledToFit()
@@ -58,22 +69,13 @@ struct ContentView: View {
                             })
                         .padding(8)
                         
-                        Text("\(books.count) Books")
+                        Text("\(filteredBooks.count) Books")
                             .font(.headline)
                             .foregroundStyle(Color.tertiary)
                             .padding(.bottom, 8)
                     }
                     .background(Color.background)
                     .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
-                                print("Search Tapped")
-                            } label: {
-                                Image(systemName: "magnifyingglass")
-                                    .foregroundStyle(Color.text)
-                                    .accessibilityLabel("Search")
-                            }
-                        }
                         ToolbarItem {
                             Button {
                                 print("Add Book Tapped")
@@ -81,14 +83,16 @@ struct ContentView: View {
                                 Image(systemName: "plus")
                                     .foregroundStyle(Color.text)
                                     .accessibilityLabel("Add Item")
-                                    
+                                
                             }
                         }
                     }
                     .navigationTitle("Library")
+                    .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search Library")
                 } detail: {
                     Text("Select an item")
                 }
+                .tint(.text)
             }
             
             Tab("Settings", systemImage: "gear") {
