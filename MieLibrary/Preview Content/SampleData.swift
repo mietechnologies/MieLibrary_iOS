@@ -25,9 +25,9 @@ let sampleData: ModelContainer = {
 struct ExampleData {
     static let books: [Book] = {
         return [
-            Book(title: "Lord of the Rings", subTitle: "The Fellowship of the Rings", author: "J.R.R. Tolkien", genre: .fantasy(.high), bookCover: "Fellowship", tags: ["adventure", "frodo"]),
-            Book(title: "Lord of the Rings", subTitle: "The Two Towers", author: "J.R.R. Tolkien", genre: .fantasy(.high), bookCover: "Towers", tags: ["adventure", "frodo"]),
-            Book(title: "Lord of the Rings", subTitle: "The Return of the King", author: "J.R.R. Tolkien", genre: .fantasy(.high), bookCover: "King", tags: ["adventure", "frodo"]),
+            Book(title: "Lord of the Rings", subTitle: "The Fellowship of the Rings", author: "J.R.R. Tolkien", genre: .fantasy(.high), series: "Lord of the Rings", seriesNumber: 1, bookCover: "Fellowship", tags: ["adventure", "frodo"]),
+            Book(title: "Lord of the Rings", subTitle: "The Two Towers", author: "J.R.R. Tolkien", genre: .fantasy(.high), series: "Lord of the Rings", seriesNumber: 2, bookCover: "Towers", tags: ["adventure", "frodo"]),
+            Book(title: "Lord of the Rings", subTitle: "The Return of the King", author: "J.R.R. Tolkien", genre: .fantasy(.high), series: "Lord of the Rings", seriesNumber: 3, bookCover: "King", tags: ["adventure", "frodo"]),
             Book(title: "The Hobbit", author: "J.R.R. Tolkien", genre: .fantasy(.high), bookCover: "Hobbit", tags: ["adventure", "bilbo"]),
             Book(title: "The Historian", author: "Elizabeth Kostava", genre: .mystery(.psychologicalThriller), bookCover: "Historian", tags: ["dracula", "vampires", "history", "europe"]),
             Book(title: "Dracula", author: "Bram Stoker", genre: .horror, bookCover: "Dracula", tags: ["dracula", "vampires", "history", "europe", "classic", "monsters"]),
