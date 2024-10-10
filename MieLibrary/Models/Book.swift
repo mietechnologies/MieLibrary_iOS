@@ -60,4 +60,28 @@ final class Book: Identifiable {
         self.dateAdded = dateAdded
         self.isFavorite = isFavorite
     }
+    
+    public func search(with text: String) -> Bool {
+        if title.lowercased().contains(text.lowercased()) {
+            return true
+        }
+        
+        if subTitle?.lowercased().contains(text.lowercased()) ?? false {
+            return true
+        }
+        
+        if author.lowercased().contains(text.lowercased()) {
+            return true
+        }
+        
+        if series?.lowercased().contains(text.lowercased()) ?? false {
+            return true
+        }
+        
+        if !tags.filter({ $0.contains(text.lowercased()) }).isEmpty {
+            return true
+        }
+        
+        return false
+    }
 }
