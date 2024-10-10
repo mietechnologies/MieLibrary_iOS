@@ -10,7 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query(sort: \Book.title, order: .forward) private var books: [Book]
     
     init() {
         let tabAppearance = UITabBarAppearance()
@@ -50,16 +50,15 @@ struct ContentView: View {
                             alignment: .center,
                             spacing: 10,
                             content: {
-                                ForEach(0..<47, id: \.self) { _ in
-                                    let bookNumber = Int.random(in: 0...4)
-                                    Image("Test Book \(bookNumber)")
+                                ForEach(books) { book in
+                                    Image(book.bookCover ?? "No Cover")
                                         .resizable()
                                         .scaledToFit()
                                 }
                             })
                         .padding(8)
                         
-                        Text("47 Books")
+                        Text("\(books.count) Books")
                             .font(.headline)
                             .foregroundStyle(Color.tertiary)
                             .padding(.bottom, 8)
@@ -76,7 +75,9 @@ struct ContentView: View {
                             }
                         }
                         ToolbarItem {
-                            Button(action: addItem) {
+                            Button {
+                                print("Add Book Tapped")
+                            } label: {
                                 Image(systemName: "plus")
                                     .foregroundStyle(Color.text)
                                     .accessibilityLabel("Add Item")
@@ -102,24 +103,9 @@ struct ContentView: View {
             }
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
-    }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(sampleData)
 }
