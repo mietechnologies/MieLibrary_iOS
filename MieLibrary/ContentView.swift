@@ -10,7 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Book.title, order: .forward) private var books: [Book]
+    @Query(sort: [SortDescriptor(\Book.title, order: .forward), SortDescriptor(\Book.subTitle, order: .forward)]) private var books: [Book]
     
     init() {
         let tabAppearance = UITabBarAppearance()
