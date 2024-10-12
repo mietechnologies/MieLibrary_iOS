@@ -41,8 +41,7 @@ struct ContentView: View {
         UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
         UINavigationBar.appearance().standardAppearance = navAppearance
         
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = .white
-        
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = .background
     }
 
     var body: some View {
@@ -52,11 +51,11 @@ struct ContentView: View {
                     ScrollView {
                         LazyVGrid(
                             columns: [
-                                .init(.flexible(), spacing: 10, alignment: .center),
-                                .init(.flexible(), spacing: 10, alignment: .center),
-                                .init(.flexible(), spacing: 10, alignment: .center),
-                                .init(.flexible(), spacing: 10, alignment: .center),
-                                .init(.flexible(), spacing: 10, alignment: .center)
+                                .init(.flexible(), spacing: 10, alignment: .bottom),
+                                .init(.flexible(), spacing: 10, alignment: .bottom),
+                                .init(.flexible(), spacing: 10, alignment: .bottom),
+                                .init(.flexible(), spacing: 10, alignment: .bottom),
+                                .init(.flexible(), spacing: 10, alignment: .bottom)
                             ],
                             alignment: .center,
                             spacing: 10,
