@@ -29,6 +29,25 @@ final class Book: Identifiable {
     var dateAdded: Date
     var isFavorite: Bool
     
+    var fullTitle: String {
+        guard let subTitle else { return title }
+        return "\(title): \(subTitle)"
+    }
+    
+    var publishedDateString: String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        guard let publishedDate else { return nil }
+        
+        return dateFormatter.string(from: publishedDate)
+    }
+    
+    var dateAddedString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        return dateFormatter.string(from: dateAdded)
+    }
+    
     init(
         title: String,
         subTitle: String? = nil,
