@@ -11,7 +11,10 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var searchText: String = ""
-    @Query(sort: [SortDescriptor(\Book.title, order: .forward), SortDescriptor(\Book.subTitle, order: .forward)]) private var books: [Book]
+    @Query(
+        sort: [SortDescriptor(\Book.title, order: .forward), SortDescriptor(\Book.subTitle, order: .forward)],
+        animation: .default
+    ) private var books: [Book]
     
     private var filteredBooks: [Book] {
         if searchText.isEmpty {
@@ -46,52 +49,10 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            Tab("Home", systemImage: "books.vertical.fill") {
-                NavigationSplitView { // TODO: Update this to a NavigationStack
-                    ScrollView {
-                        LazyVGrid(
-                            columns: [
-                                .init(.flexible(), spacing: 10, alignment: .bottom),
-                                .init(.flexible(), spacing: 10, alignment: .bottom),
-                                .init(.flexible(), spacing: 10, alignment: .bottom),
-                                .init(.flexible(), spacing: 10, alignment: .bottom),
-                                .init(.flexible(), spacing: 10, alignment: .bottom)
-                            ],
-                            alignment: .center,
-                            spacing: 10,
-                            content: {
-                                ForEach(filteredBooks) { book in
-                                    Image(book.bookCover ?? "No Cover")
-                                        .resizable()
-                                        .scaledToFit()
-                                }
-                            })
-                        .padding(8)
-                        
-                        Text("\(filteredBooks.count) Books")
-                            .font(.headline)
-                            .foregroundStyle(Color.tertiary)
-                            .padding(.bottom, 8)
-                    }
-                    .background(Color.background)
-                    .toolbar {
-                        ToolbarItem {
-                            Button {
-                                print("Add Book Tapped")
-                            } label: {
-                                Image(systemName: "plus")
-                                    .foregroundStyle(Color.text)
-                                    .accessibilityLabel("Add Item")
-                                
-                            }
-                        }
-                    }
-                    .navigationTitle("Library")
-                    .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search Library")
-                } detail: {
-                    Text("Select an item")
-                }
-                .tint(.text)
+            Tab("Library", systemImage: "books.vertical.fill") {
+                LibraryPage(books: books, addBook: { book in
+                    modelContext.insert(book)
+                })
             }
             
             Tab("Settings", systemImage: "gear") {
