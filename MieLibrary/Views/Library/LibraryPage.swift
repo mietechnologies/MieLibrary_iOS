@@ -48,7 +48,20 @@ struct LibraryPage: View {
                 ToolbarItem {
                     Button {
                         addBook(
-                            Book(title: "Test Book", subTitle: "\(Int.random(in: 0..<100))", author: "Test Author", genre: .adventure, tags: [])
+                            Book(
+                                title: "Lord of the Rings",
+                                subTitle: "Fellowship of the Rings",
+                                author: "J.R.R Tolkein",
+                                publisher: "Houghton Miffin",
+                                publishedDate: .init(),
+                                numberOfPages: 423,
+                                genre: .fantasy(.high),
+                                series: "Lord of the Rings",
+                                seriesNumber: 1,
+                                isbn: "1234567890",
+                                bookCover: "Fellowship",
+                                tags: ["frodo", "tolkein", "middle-earth", "test", "tag", "book", "apple books"])
+//                            ExampleData.books.randomElement()!
                         )
                     } label: {
                         Image(systemName: "plus")
@@ -58,7 +71,9 @@ struct LibraryPage: View {
                 }
             }
             .navigationDestination(for: Book.self) { book in
-                Text(book.title) // TODO: Update to the BookDetailPage
+                BookDetailsPage(book: book) { searchTerm in
+                    self.searchText = searchTerm
+                }
             }
         }
         .tint(.text)

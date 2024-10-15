@@ -12,9 +12,9 @@ import SwiftData
 struct MieLibraryApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Book.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true) // TODO: Change this to false when ready for proper testing
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
