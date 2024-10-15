@@ -24,9 +24,12 @@ struct TextModifier: ViewModifier {
     
     private var baseFontSize: CGFloat {
         switch style {
-        case .header: return 30
-        case .subheader: return 18
-        case .body: return 24
+        case .header:           return 30
+        case .subheader:        return 18
+        case .body:             return 24
+        case .info:             return 20
+        case .sectionHeader:    return 24
+        case .button:           return 20
         }
     }
     
@@ -59,12 +62,18 @@ extension TextModifier {
         case header
         case subheader
         case body
+        case info
+        case sectionHeader
+        case button
         
         func font(size: CGFloat) -> Font {
             switch self {
-            case .header: return .system(size: size, weight: .black, design: .default)
-            case .subheader: return .system(size: size, weight: .heavy, design: .default)
-            case .body: return .system(size: size, weight: .regular, design: .default)
+            case .header:           return .system(size: size, weight: .black, design: .default)
+            case .subheader:        return .system(size: size, weight: .heavy, design: .default)
+            case .body:             return .system(size: size, weight: .regular, design: .default)
+            case .info:             return .system(size: size, weight: .light, design: .default)
+            case .sectionHeader:    return .system(size: size, weight: .heavy, design: .default)
+            case .button:           return .system(size: size, weight: .semibold, design: .default)
             }
         }
     }
