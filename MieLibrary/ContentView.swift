@@ -16,14 +16,6 @@ struct ContentView: View {
         animation: .default
     ) private var books: [Book]
     
-    private var filteredBooks: [Book] {
-        if searchText.isEmpty {
-            return books
-        } else {
-            return books.filter({ $0.search(with: searchText) })
-        }
-    }
-    
     init() {
         let tabAppearance = UITabBarAppearance()
         tabAppearance.configureWithTransparentBackground()

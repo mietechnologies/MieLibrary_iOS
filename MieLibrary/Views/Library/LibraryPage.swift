@@ -15,7 +15,7 @@ struct LibraryPage: View {
     @State private var searchText: String = ""
     
     private var filteredBooks: [Book] {
-        return searchText.isEmpty ? books : books.filter({ $0.search(with: searchText) })
+        return searchText.isEmpty ? books : books.search(for: searchText)
     }
     
     private let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10, alignment: .bottom), count: 5)
@@ -60,7 +60,7 @@ struct LibraryPage: View {
                                 seriesNumber: 1,
                                 isbn: "1234567890",
                                 bookCover: "Fellowship",
-                                tags: ["frodo", "tolkein", "middle-earth", "test", "tag", "book", "apple books"])
+                                tags: ["frodo", "tolkein", "middle-earth"])
 //                            ExampleData.books.randomElement()!
                         )
                     } label: {
