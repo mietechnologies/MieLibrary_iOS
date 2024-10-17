@@ -48,7 +48,7 @@ struct BookDetailsPage: View {
                                 .containerValue(\.viewWidth, viewWidth)
                                 .onTapGesture {
                                     dismiss()
-                                    searchAction(tag)
+                                    searchAction("tag=\(tag)")
                                 }
                         }
                     }
@@ -118,7 +118,7 @@ struct BookDetailsPage: View {
             if let series = book.series, let number = book.seriesNumber {
                 TitledButton(header: "Series", buttonText: series, bookNumber: number) {
                     dismiss()
-                    searchAction(series)
+                    searchAction("series=\(series)")
                 }
             }
             
