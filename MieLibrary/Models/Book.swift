@@ -97,10 +97,47 @@ final class Book: Identifiable {
             return true
         }
         
-        if !tags.filter({ $0.contains(text.lowercased()) }).isEmpty {
-            return true
-        }
-        
         return false
+    }
+}
+
+extension Array where Element == Book {
+    func search(for text: String) -> [Book] {
+        let splitText = text.split(separator: "=")
+        
+        if splitText.count > 1 {
+            let searchText = splitText[0].lowercased()
+            let searchPhrase = splitText[1].lowercased()
+            
+            if searchText == "tag" || searchText == "tags" {
+                return self.filter({ !$0.tags.filter({ $0.contains(searchPhrase) }).isEmpty })
+            }
+            
+            if searchText == "author" {
+                return self.filter({ $0.author.lowercased().contains(searchPhrase) })
+            }
+            
+            if searchText == "publisher" {
+                return self.filter({
+                    guard let publisher = $0.publisher else { return false }
+                    return publisher.lowercased().contains(searchPhrase)
+                })
+            }
+            
+            if searchText == "series" {
+                return self.filter({
+                    guard let series = $0.series else { return false }
+                    return series.lowercased().contains(searchPhrase)
+                })
+            }
+            
+            if searchText == "genre" {
+                return self.filter({ $0.genre.rawValue.contains(searchPhrase) })
+            }
+            
+            return []
+        } else {
+            return self.filter({ $0.search(with: text) })
+        }
     }
 }
