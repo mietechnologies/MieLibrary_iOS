@@ -10,16 +10,26 @@ import SwiftUI
 struct TitledTextField: View {
     
     var title: String
+    var type: TitleType
     @Binding var text: String
     var onDone: (() -> Void)?
     
-    init(_ title: String, text: Binding<String>, onDone: (() -> Void)? = nil) {
+    init(_ title: String, text: Binding<String>, titleType: TitleType = .vertical, onDone: (() -> Void)? = nil) {
         self.title = title
+        self.type = titleType
         self._text = text
         self.onDone = onDone
     }
     
     var body: some View {
+        if type == .vertical {
+            VerticalLook()
+        } else {
+            HorizontalLook()
+        }
+    }
+    
+    private func VerticalLook() -> some View {
         VStack(alignment: .leading) {
             Text(title)
                 .themeStyle(.subheader)
@@ -32,7 +42,33 @@ struct TitledTextField: View {
                         onDone()
                     }
                 }
-                
         }
+    }
+    
+    private func HorizontalLook() -> some View {
+        HStack(alignment: .center) {
+            Text(title)
+                .themeStyle(.subheader)
+            
+            Spacer()
+            
+            TextField("", text: $text)
+                .themeStyle(.body)
+                .multilineTextAlignment(.trailing)
+                .textFieldStyle(.roundedBorder)
+                .onSubmit {
+                    if let onDone {
+                        onDone()
+                    }
+                }
+                .frame(width: 100)
+        }
+    }
+}
+
+extension TitledTextField {
+    enum TitleType {
+        case horizontal
+        case vertical
     }
 }
