@@ -17,7 +17,7 @@ class BookInputViewModel {
     var publisher: String = ""
     var publishedDate: Date = .init()
     var numberOfPagesRaw: String = ""
-    var genre: GenreType = .adventure
+    var genre: GenreType? = nil
     var series: String = ""
     var seriesNumberRaw: String = ""
     var isbn: String = ""
@@ -47,15 +47,15 @@ class BookInputViewModel {
         _tags = book?.tags ?? []
     }
     
-    func editedBook() -> Book {
+    func addedBook() -> Book {
         return .init(
             title: title,
             subTitle: subtitle.isEmpty ? nil : subtitle,
             author: author,
             publisher: publisher.isEmpty ? nil : publisher,
-            publishedDate: nil, // TODO: Fix the logic for this
+            publishedDate: publishedDate,
             numberOfPages: numberOfPages == 0 ? nil : numberOfPages,
-            genre: genre,
+            genre: genre!,
             series: series.isEmpty ? nil : series,
             seriesNumber: seriesNumber == 0 ? nil : seriesNumber,
             isbn: isbn.isEmpty ? nil : isbn,
@@ -72,7 +72,7 @@ class BookInputViewModel {
             book.publisher = publisher.isEmpty ? nil : publisher
             book.publishedDate = publishedDate
             book.numberOfPages = numberOfPages
-            book.genre = genre
+            book.genre = genre ?? book.genre
             book.series = series.isEmpty ? nil : series
             book.seriesNumber = seriesNumber
             book.isbn = isbn.isEmpty ? nil : isbn
