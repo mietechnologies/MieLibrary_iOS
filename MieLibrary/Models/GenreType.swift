@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum GenreType: Codable {
+enum GenreType: Codable, Hashable, CaseIterable {
     
     typealias RawValue = String
     
@@ -61,6 +61,50 @@ enum GenreType: Codable {
         case crime = "Crime"
         case legal = "Legal"
         case spy = "Spy"
+    }
+    
+    static var allCases: [GenreType] {
+        return [
+            .adventure,
+            .fantasy(.high),
+            .fantasy(.low),
+            .fantasy(.dark),
+            .fantasy(.swordAndSorcery),
+            .sciFi,
+            .historicalFiction,
+            .horror,
+            .mystery(.detective),
+            .mystery(.psychologicalThriller),
+            .mystery(.crime),
+            .mystery(.legal),
+            .mystery(.spy),
+            .thriller(.detective),
+            .thriller(.psychologicalThriller),
+            .thriller(.crime),
+            .thriller(.legal),
+            .thriller(.spy),
+            .romance,
+            .literaryFiction(.dystopian),
+            .literaryFiction(.utopian),
+            .literaryFiction(.postApocalytic),
+            .literaryFiction(.steamPunk),
+            .literaryFiction(.urbanFantasy),
+            .literaryFiction(.paranormal),
+            .literaryFiction(.artificialIntelligence),
+            .youngAdult,
+            .biography,
+            .memoir,
+            .selfHelp,
+            .history,
+            .travel,
+            .trueCrime,
+            .philosophy,
+            .science,
+            .cooking,
+            .essayCollection,
+            .journalism(.magazine),
+            .journalism(.newspaper)
+        ]
     }
     
     var rawValue: String {

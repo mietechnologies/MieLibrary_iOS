@@ -13,6 +13,7 @@ struct BookDetailsPage: View {
     var book: Book
     @State private var isBookCoverExpanded: Bool = false
     @State private var isShowingPublisherDetails: Bool = false
+    @State private var isEditing: Bool = false
     var searchAction: (String) -> Void
     
     var body: some View {
@@ -62,7 +63,7 @@ struct BookDetailsPage: View {
                         Spacer()
                         
                         Button {
-                            print("Edit Tapped")
+                            isEditing.toggle()
                         } label: {
                             Text("Edit")
                                 .themeStyle(.button)
@@ -70,6 +71,7 @@ struct BookDetailsPage: View {
                                 .padding(.horizontal, 48)
                         }
                         .background(Color.accented, in: RoundedRectangle(cornerRadius: 8))
+                        .padding(.top, 8)
                         
                         Spacer()
                     }
@@ -101,6 +103,9 @@ struct BookDetailsPage: View {
                         }
                     }
                 }
+            }
+            .sheet(isPresented: $isEditing) {
+                BookInputPage(book: self.book)
             }
         }
     }
