@@ -37,12 +37,32 @@ struct BookInputPage: View {
                     
                     TitledTextField("Author", text: $vm.author)
                     
-                    TitledTextField("Number of Pages", text: $vm.numberOfPagesRaw)
-                        .keyboardType(.numberPad)
+                    HStack(alignment: .center) {
+                        Text("Genre")
+                            .themeStyle(.subheader)
+                        
+                        Spacer()
+                        
+                        Menu {
+                            Picker("Genre", selection: $vm.genre) {
+                                ForEach(GenreType.allCases, id: \.self) { genre in
+                                    Text(genre.rawValue)
+                                        .themeStyle(.body)
+                                        .tag(genre)
+                                }
+                            }
+                        } label: {
+                            Text(vm.genre?.rawValue ?? "No Genre Selected")
+                                .themeStyle(.body, fontColor: .accented)
+                        }
+                    }
                     
                     TitledTextField("Series", text: $vm.series)
                     
-                    TitledTextField("Series", text: $vm.seriesNumberRaw)
+                    TitledTextField("# in Series", text: $vm.seriesNumberRaw, titleType: .horizontal)
+                        .keyboardType(.numberPad)
+                    
+                    TitledTextField("# of Pages", text: $vm.numberOfPagesRaw, titleType: .horizontal)
                         .keyboardType(.numberPad)
                     
                     TagsView {
