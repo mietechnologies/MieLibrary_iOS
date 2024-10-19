@@ -27,6 +27,7 @@ public struct TagsView<Content: View>: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity)
             }
         }
     }
