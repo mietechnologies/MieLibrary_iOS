@@ -10,10 +10,10 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(
-        sort: [SortDescriptor(\Book.title, order: .forward), SortDescriptor(\Book.subTitle, order: .forward)],
-        animation: .default
-    ) private var books: [Book]
+    @State private var sortOrder = [
+        SortDescriptor(\Book.title, order: .forward),
+        SortDescriptor(\Book.subTitle, order: .forward)
+    ]
     
     init() {
         let tabAppearance = UITabBarAppearance()
@@ -41,7 +41,7 @@ struct ContentView: View {
     var body: some View {
         TabView {
             Tab("Library", systemImage: "books.vertical.fill") {
-                LibraryPage(books: books, addBook: { book in
+                LibraryPage(sortOrder: $sortOrder, addBook: { book in
                     modelContext.insert(book)
                 })
             }

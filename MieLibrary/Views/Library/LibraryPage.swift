@@ -6,19 +6,27 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LibraryPage: View {
     
-    var books: [Book]
+    @Query private var books: [Book]
     var addBook: ((Book) -> Void)
     
     @State private var searchText: String = ""
+    @Binding var sortOrder: [SortDescriptor<Book>]
     
     private var filteredBooks: [Book] {
         return searchText.isEmpty ? books : books.search(for: searchText)
     }
     
     private let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10, alignment: .bottom), count: 5)
+    
+    init(sortOrder: Binding<[SortDescriptor<Book>]>, addBook: @escaping (Book) -> Void) {
+        self.addBook = addBook
+        _sortOrder = sortOrder
+        _books = Query(sort: sortOrder.wrappedValue, animation: .default)
+    }
     
     var body: some View {
         NavigationStack {
@@ -47,22 +55,24 @@ struct LibraryPage: View {
             .toolbar {
                 ToolbarItem {
                     Button {
-                        addBook(
-                            Book(
-                                title: "Lord of the Rings",
-                                subTitle: "Fellowship of the Rings",
-                                author: "J.R.R Tolkein",
-                                publisher: "Houghton Miffin",
-                                publishedDate: .init(),
-                                numberOfPages: 423,
-                                genre: .fantasy(.high),
-                                series: "Lord of the Rings",
-                                seriesNumber: 1,
-                                isbn: "1234567890",
-                                bookCover: "Fellowship",
-                                tags: ["frodo", "tolkein", "middle-earth"])
-//                            ExampleData.books.randomElement()!
-                        )
+                        withAnimation {
+                            addBook(
+                                Book(
+                                    title: "Lord of the Rings",
+                                    subTitle: "Fellowship of the Rings",
+                                    author: "J.R.R Tolkein",
+                                    publisher: "Houghton Miffin",
+                                    publishedDate: .init(),
+                                    numberOfPages: 423,
+                                    genre: .fantasy(.high),
+                                    series: "Lord of the Rings",
+                                    seriesNumber: 1,
+                                    isbn: "1234567890",
+                                    bookCover: "Fellowship",
+                                    tags: ["frodo", "tolkein", "middle-earth"])
+    //                            ExampleData.books.randomElement()!
+                            )
+                        }
                     } label: {
                         Image(systemName: "plus")
                             .foregroundStyle(Color.text)
