@@ -127,7 +127,7 @@ struct BookDetailsPage: View {
                 }
             }
             
-            TitledText(header: "Genre", text: book.genre.rawValue)
+            TitledText(header: "Genre", text: book.genre)
             
             HStack {
                 Spacer()
