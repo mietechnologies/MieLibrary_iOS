@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SortingCategories: String, CaseIterable {
+enum SortingCategory: String, CaseIterable {
     case title = "Title"
     case author = "Author"
     case dateAdded = "Date Added"
@@ -39,7 +39,7 @@ enum SortingCategories: String, CaseIterable {
             ]
         case .genre:
             return [
-                SortDescriptor(\Book.genre.rawValue, order: order),
+                SortDescriptor(\Book.genre, order: order),
                 SortDescriptor(\Book.title, order: .forward),
                 SortDescriptor(\Book.subTitle, order: .forward)
             ]
