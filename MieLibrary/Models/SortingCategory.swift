@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SortingCategory: String, CaseIterable, Identifiable {
+enum SortingCategory: String, Codable, CaseIterable, Identifiable {
     
     case title = "Title"
     case author = "Author"
