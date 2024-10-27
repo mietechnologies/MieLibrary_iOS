@@ -23,7 +23,7 @@ struct CheckboxToggleStyle: ToggleStyle {
                 RoundedRectangle(cornerRadius: 2)
                     .stroke(lineWidth: 0)
                     .background(RoundedRectangle(cornerRadius: 2).fill(configuration.isOn ? Color.highlight : Color.clear))
-                    .frame(width: configuration.isOn ? 19 : 0, height: configuration.isOn ? 19 : 0)
+                    .frame(width: configuration.isOn ? 17 : 0, height: configuration.isOn ? 17 : 0)
             }
         }
     }
