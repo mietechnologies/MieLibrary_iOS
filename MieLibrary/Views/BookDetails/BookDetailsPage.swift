@@ -106,6 +106,7 @@ struct BookDetailsPage: View {
             }
             .sheet(isPresented: $isEditing) {
                 BookInputPage(book: self.book)
+                    .presentationDragIndicator(.visible)
             }
         }
     }
