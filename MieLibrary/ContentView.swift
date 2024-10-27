@@ -7,11 +7,10 @@
 
 import SwiftUI
 import SwiftData
-
+  
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var sortOrder: SortingCategory = .title
-    @State private var sortDirection: SortOrder = .forward
+    @State private var appSettings: AppSettings = .init()
     
     init() {
         let tabAppearance = UITabBarAppearance()
@@ -39,7 +38,7 @@ struct ContentView: View {
     var body: some View {
         TabView {
             Tab("Library", systemImage: "books.vertical.fill") {
-                LibraryPage(sorting: $sortOrder, order: $sortDirection, addBook: { book in
+                LibraryPage(sorting: $appSettings.sortMethod, order: $appSettings.sortOrder, addBook: { book in
                     modelContext.insert(book)
                 })
             }
