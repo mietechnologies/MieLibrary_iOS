@@ -21,7 +21,7 @@ struct BookInputPage: View {
             ZStack(alignment: .bottom) {
                 Rectangle()
                     .foregroundStyle(Color.main)
-                    .frame(height: 100)
+                    .frame(height: 80)
                     .frame(maxWidth: .infinity)
                 
                 Text("\(vm.book?.title ?? "New Book")")

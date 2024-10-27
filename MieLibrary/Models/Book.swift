@@ -20,7 +20,7 @@ final class Book: Identifiable {
     var publisher: String?
     var publishedDate: Date?
     var numberOfPages: Int?
-    var genre: GenreType
+    var genre: GenreType.RawValue
     var series: String?
     var seriesNumber: Int?
     @Attribute(.unique) var isbn: String?
@@ -48,6 +48,10 @@ final class Book: Identifiable {
         return dateFormatter.string(from: dateAdded)
     }
     
+    var genreType: GenreType {
+        .init(rawValue: genre) ?? .adventure
+    }
+    
     init(
         title: String,
         subTitle: String? = nil,
@@ -70,7 +74,7 @@ final class Book: Identifiable {
         self.publisher = publisher
         self.publishedDate = publishedDate
         self.numberOfPages = numberOfPages
-        self.genre = genre
+        self.genre = genre.rawValue
         self.series = series
         self.seriesNumber = seriesNumber
         self.isbn = isbn
@@ -132,7 +136,7 @@ extension Array where Element == Book {
             }
             
             if searchText == "genre" {
-                return self.filter({ $0.genre.rawValue.contains(searchPhrase) })
+                return self.filter({ $0.genre.contains(searchPhrase) })
             }
             
             return []

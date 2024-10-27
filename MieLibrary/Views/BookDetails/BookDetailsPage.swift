@@ -106,6 +106,7 @@ struct BookDetailsPage: View {
             }
             .sheet(isPresented: $isEditing) {
                 BookInputPage(book: self.book)
+                    .presentationDragIndicator(.visible)
             }
         }
     }
@@ -127,7 +128,7 @@ struct BookDetailsPage: View {
                 }
             }
             
-            TitledText(header: "Genre", text: book.genre.rawValue)
+            TitledText(header: "Genre", text: book.genre)
             
             HStack {
                 Spacer()

@@ -6,19 +6,30 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LibraryPage: View {
     
-    var books: [Book]
+    @Query private var books: [Book]
     var addBook: ((Book) -> Void)
     
+    @State private var showSortPage: Bool = false
     @State private var searchText: String = ""
+    @Binding var sorting: SortingCategory
+    @Binding var sortDirection: SortOrder
     
     private var filteredBooks: [Book] {
         return searchText.isEmpty ? books : books.search(for: searchText)
     }
     
     private let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10, alignment: .bottom), count: 5)
+    
+    init(sorting: Binding<SortingCategory>, order: Binding<SortOrder>, addBook: @escaping (Book) -> Void) {
+        self.addBook = addBook
+        _sorting = sorting
+        _sortDirection = order
+        _books = Query(sort: sorting.wrappedValue.sortDescriptors(sortDirection), animation: .default)
+    }
     
     var body: some View {
         NavigationStack {
@@ -47,6 +58,16 @@ struct LibraryPage: View {
             .toolbar {
                 ToolbarItem {
                     Button {
+                        showSortPage.toggle()
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease")
+                            .foregroundStyle(Color.text)
+                            .accessibilityLabel("Sort Library")
+                    }
+                }
+                
+                ToolbarItem {
+                    Button {
                         addBook(
                             Book(
                                 title: "Lord of the Rings",
@@ -61,7 +82,6 @@ struct LibraryPage: View {
                                 isbn: "1234567890",
                                 bookCover: "Fellowship",
                                 tags: ["frodo", "tolkein", "middle-earth"])
-//                            ExampleData.books.randomElement()!
                         )
                     } label: {
                         Image(systemName: "plus")
@@ -74,6 +94,12 @@ struct LibraryPage: View {
                 BookDetailsPage(book: book) { searchTerm in
                     self.searchText = searchTerm
                 }
+            }
+            .sheet(isPresented: $showSortPage) {
+                SortPage(selection: $sorting, order: $sortDirection)
+//                    .presentationDetents([.fraction(0.7)])
+                    .presentationDetents([.fraction(0.7)])
+                    .presentationDragIndicator(.visible)
             }
         }
         .tint(.text)

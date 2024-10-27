@@ -40,7 +40,7 @@ class BookInputViewModel {
         _publisher = book?.publisher ?? ""
         _publishedDate = book?.publishedDate ?? .init()
         _numberOfPagesRaw = book?.numberOfPages == nil ? "" : String(book!.numberOfPages!)
-        _genre = book?.genre ?? .adventure
+        _genre = GenreType(rawValue: book?.genre ?? "Adventure")
         _series = book?.series ?? ""
         _seriesNumberRaw = book?.seriesNumber == nil ? "" : String(book!.seriesNumber!)
         _isbn = book?.isbn ?? ""
@@ -72,7 +72,7 @@ class BookInputViewModel {
             book.publisher = publisher.isEmpty ? nil : publisher
             book.publishedDate = publishedDate
             book.numberOfPages = numberOfPages
-            book.genre = genre ?? book.genre
+            book.genre = genre?.rawValue ?? book.genre
             book.series = series.isEmpty ? nil : series
             book.seriesNumber = seriesNumber
             book.isbn = isbn.isEmpty ? nil : isbn

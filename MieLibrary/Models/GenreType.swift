@@ -132,4 +132,51 @@ enum GenreType: Codable, Hashable, CaseIterable {
         case let .journalism(subtype): return "Journalism/\(subtype.rawValue)"
         }
     }
+
+    init?(rawValue: String) {
+        let splitValue = rawValue.split(separator: "/")
+        if splitValue.count == 1 {
+            switch rawValue {
+            case "Adventure": self = .adventure
+            case "Science Fiction": self = .sciFi
+            case "Historical Fiction": self = .historicalFiction
+            case "Horror": self = .horror
+            case "Romance": self = .romance
+            case "Young Adult": self = .youngAdult
+            case "Biography": self = .biography
+            case "Memoir": self = .memoir
+            case "Self-Help": self = .selfHelp
+            case "History": self = .history
+            case "Travel": self = .travel
+            case "True Crime": self = .trueCrime
+            case "Philosophy": self = .philosophy
+            case "Science": self = .science
+            case "Cooking": self = .cooking
+            case "Essay Collection": self = .essayCollection
+            default: return nil
+            }
+        } else {
+            if let fantasySubtype = FantasySubtype(rawValue: String(splitValue[1])) {
+                self = .fantasy(fantasySubtype)
+            } else if let journalismSubtype = JournalismSubtype(rawValue: String(splitValue[1])) {
+                self = .journalism(journalismSubtype)
+            } else if let literarySubtype = LiteraryFictionSubtype(rawValue: String(splitValue[1])) {
+                self = .literaryFiction(literarySubtype)
+            } else if let suspenseSubtype = SuspenseSubtype(rawValue: String(splitValue[1])) {
+                switch String(splitValue[0]) {
+                case "Mystery": self = .mystery(suspenseSubtype)
+                case "Thriller": self = .thriller(suspenseSubtype)
+                default: return nil
+                }
+            } else {
+                return nil
+            }
+        }
+    }
+}
+
+extension GenreType: Comparable {
+    static func < (lhs: GenreType, rhs: GenreType) -> Bool {
+        lhs.rawValue < rhs.rawValue
+    }
 }
