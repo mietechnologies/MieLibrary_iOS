@@ -7,12 +7,15 @@
 
 import Foundation
 
-enum SortingCategory: String, CaseIterable {
+enum SortingCategory: String, CaseIterable, Identifiable {
+    
     case title = "Title"
     case author = "Author"
     case dateAdded = "Date Added"
     case publisher = "Publisher"
     case genre = "Genre"
+    
+    var id: String { self.rawValue }
     
     func sortDescriptors(_ order: SortOrder = .forward) -> [SortDescriptor<Book>] {
         switch self {
