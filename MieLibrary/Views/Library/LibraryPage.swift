@@ -13,8 +13,10 @@ struct LibraryPage: View {
     @Query private var books: [Book]
     var addBook: ((Book) -> Void)
     
+    @State private var showSortPage: Bool = false
     @State private var searchText: String = ""
-    @Binding var sortOrder: [SortDescriptor<Book>]
+    @Binding var sorting: SortingCategory
+    @Binding var sortDirection: SortOrder
     
     private var filteredBooks: [Book] {
         return searchText.isEmpty ? books : books.search(for: searchText)
@@ -22,10 +24,11 @@ struct LibraryPage: View {
     
     private let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 10, alignment: .bottom), count: 5)
     
-    init(sortOrder: Binding<[SortDescriptor<Book>]>, addBook: @escaping (Book) -> Void) {
+    init(sorting: Binding<SortingCategory>, order: Binding<SortOrder>, addBook: @escaping (Book) -> Void) {
         self.addBook = addBook
-        _sortOrder = sortOrder
-        _books = Query(sort: sortOrder.wrappedValue, animation: .default)
+        _sorting = sorting
+        _sortDirection = order
+        _books = Query(sort: sorting.wrappedValue.sortDescriptors(sortDirection), animation: .default)
     }
     
     var body: some View {
@@ -55,24 +58,31 @@ struct LibraryPage: View {
             .toolbar {
                 ToolbarItem {
                     Button {
-                        withAnimation {
-                            addBook(
-                                Book(
-                                    title: "Lord of the Rings",
-                                    subTitle: "Fellowship of the Rings",
-                                    author: "J.R.R Tolkein",
-                                    publisher: "Houghton Miffin",
-                                    publishedDate: .init(),
-                                    numberOfPages: 423,
-                                    genre: .fantasy(.high),
-                                    series: "Lord of the Rings",
-                                    seriesNumber: 1,
-                                    isbn: "1234567890",
-                                    bookCover: "Fellowship",
-                                    tags: ["frodo", "tolkein", "middle-earth"])
-    //                            ExampleData.books.randomElement()!
-                            )
-                        }
+                        showSortPage.toggle()
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease")
+                            .foregroundStyle(Color.text)
+                            .accessibilityLabel("Sort Library")
+                    }
+                }
+                
+                ToolbarItem {
+                    Button {
+                        addBook(
+                            Book(
+                                title: "Lord of the Rings",
+                                subTitle: "Fellowship of the Rings",
+                                author: "J.R.R Tolkein",
+                                publisher: "Houghton Miffin",
+                                publishedDate: .init(),
+                                numberOfPages: 423,
+                                genre: .fantasy(.high),
+                                series: "Lord of the Rings",
+                                seriesNumber: 1,
+                                isbn: "1234567890",
+                                bookCover: "Fellowship",
+                                tags: ["frodo", "tolkein", "middle-earth"])
+                        )
                     } label: {
                         Image(systemName: "plus")
                             .foregroundStyle(Color.text)
@@ -84,6 +94,12 @@ struct LibraryPage: View {
                 BookDetailsPage(book: book) { searchTerm in
                     self.searchText = searchTerm
                 }
+            }
+            .sheet(isPresented: $showSortPage) {
+                SortPage(selection: $sorting, order: $sortDirection)
+//                    .presentationDetents([.fraction(0.7)])
+                    .presentationDetents([.fraction(0.7)])
+                    .presentationDragIndicator(.visible)
             }
         }
         .tint(.text)
