@@ -80,6 +80,15 @@ class BookInputViewModel {
         }
     }
     
+    func constructBook() -> Book? {
+        if let genre, !title.isEmpty, !author.isEmpty {
+            let book = Book(title: title, author: author, genre: genre, tags: tags)
+            return book
+        } else {
+            return nil
+        }
+    }
+    
     func removeTag(_ tag: String) {
         tags.removeAll(where: { $0 == tag })
     }

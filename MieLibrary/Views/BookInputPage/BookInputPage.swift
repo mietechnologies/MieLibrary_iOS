@@ -11,9 +11,11 @@ struct BookInputPage: View {
     @Environment(\.dismiss) var dismiss
     
     @State var vm: BookInputViewModel
+    var addBook: ((Book) -> Void)?
     
-    init(book: Book? = nil) {
+    init(book: Book? = nil, addBook: ((Book) -> Void)? = nil) {
         _vm = .init(initialValue: .init(book: book))
+        self.addBook = addBook
     }
     
     var body: some View {
@@ -96,9 +98,12 @@ struct BookInputPage: View {
                         if vm.book != nil {
                             vm.updateBook()
                         }
+                        if let addBook, let book = vm.constructBook() {
+                            addBook(book)
+                        }
                         dismiss()
                     } label: {
-                        Text("Save")
+                        Text(vm.book != nil ? "Save" : "Add")
                             .themeStyle(.button)
                             .padding(.vertical, 8)
                             .padding(.horizontal, 48)
