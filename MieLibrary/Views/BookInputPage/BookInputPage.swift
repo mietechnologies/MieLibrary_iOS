@@ -88,7 +88,7 @@ struct BookInputPage: View {
                     
                     TitledTextField("Publisher", text: $vm.publisher)
                     
-                    DatePicker("Published Date", selection: $vm.publishedDate, displayedComponents: .date)
+                    DatePicker("Published Date", selection: Binding<Date>(get: {vm.publishedDate ?? Date()}, set: {vm.publishedDate = $0}), displayedComponents: .date)
                         .themeStyle(.subheader)
                         .padding(.vertical, 8)
                     
@@ -128,7 +128,8 @@ struct BookInputPage: View {
                     Book(
                         title: "Lord of the Rings",
                         subTitle: "Fellowship of the Rings",
-                        author: "J.R.R Tolkein",
+                        authorFirstName: "J.R.R.",
+                        authorLastName: "Tolkein",
                         publisher: "Houghton Miffin",
                         publishedDate: .init(),
                         numberOfPages: 423,

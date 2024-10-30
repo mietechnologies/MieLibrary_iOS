@@ -13,9 +13,10 @@ class BookInputViewModel {
     
     var title: String = ""
     var subtitle: String = ""
-    var author: String = ""
+    var authorFirstName: String = ""
+    var authorLastName: String = ""
     var publisher: String = ""
-    var publishedDate: Date = .init()
+    var publishedDate: Date?
     var numberOfPagesRaw: String = ""
     var genre: GenreType? = nil
     var series: String = ""
@@ -36,7 +37,8 @@ class BookInputViewModel {
         
         _title = book?.title ?? ""
         _subtitle = book?.subTitle ?? ""
-        _author = book?.author ?? ""
+        _authorFirstName = book?.authorFirstName ?? ""
+        _authorLastName = book?.authorLastName ?? ""
         _publisher = book?.publisher ?? ""
         _publishedDate = book?.publishedDate ?? .init()
         _numberOfPagesRaw = book?.numberOfPages == nil ? "" : String(book!.numberOfPages!)
@@ -77,15 +79,6 @@ class BookInputViewModel {
             book.seriesNumber = seriesNumber
             book.isbn = isbn.isEmpty ? nil : isbn
             book.tags = tags
-        }
-    }
-    
-    func constructBook() -> Book? {
-        if let genre, !title.isEmpty, !author.isEmpty {
-            let book = Book(title: title, author: author, genre: genre, tags: tags)
-            return book
-        } else {
-            return nil
         }
     }
     
