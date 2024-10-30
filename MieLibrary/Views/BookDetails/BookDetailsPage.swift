@@ -115,7 +115,7 @@ struct BookDetailsPage: View {
         VStack(spacing: 16) {
             TitledText(header: "Title", text: book.fullTitle)
             
-            TitledText(header: "Author", text: book.author)
+            TitledText(header: "Author", text: book.authorName)
         }
     }
     
@@ -187,7 +187,7 @@ struct BookDetailsPage: View {
     let book = Book(
         title: "Lord of the Rings",
         subTitle: "Fellowship of the Rings",
-        author: "J.R.R Tolkein",
+        authorLastName: "Tolkein",
         publisher: "Houghton Miffin",
         publishedDate: .init(),
         numberOfPages: 423,

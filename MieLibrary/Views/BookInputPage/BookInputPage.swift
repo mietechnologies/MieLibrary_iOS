@@ -37,7 +37,9 @@ struct BookInputPage: View {
                     
                     TitledTextField("Subtitle", text: $vm.subtitle)
                     
-                    TitledTextField("Author", text: $vm.author)
+                    TitledTextField("Author First Name", text: $vm.authorFirstName)
+                    
+                    TitledTextField("Author Last Name", text: $vm.authorLastName)
                     
                     HStack(alignment: .center) {
                         Text("Genre")

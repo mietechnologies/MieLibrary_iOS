@@ -26,7 +26,8 @@ enum SortingCategory: String, Codable, CaseIterable, Identifiable {
             ]
         case .author: // TODO: Update for when author name is split
             return [
-                SortDescriptor(\Book.author, order: order),
+                SortDescriptor(\Book.authorLastName, order: order),
+                SortDescriptor(\Book.authorFirstName, order: order),
                 SortDescriptor(\Book.title, order: .forward),
                 SortDescriptor(\Book.subTitle, order: .forward)
             ]

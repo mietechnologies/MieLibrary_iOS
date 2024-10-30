@@ -35,6 +35,11 @@ final class Book: Identifiable {
         return "\(title): \(subTitle)"
     }
     
+    var authorName: String {
+        guard let firstName = authorFirstName else { return "\(authorLastName)" }
+        return "\(firstName) \(authorLastName)"
+    }
+    
     var publishedDateString: String? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy"
