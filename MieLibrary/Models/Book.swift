@@ -114,7 +114,11 @@ final class Book: Identifiable {
             return true
         }
         
-        if author.lowercased().contains(text.lowercased()) {
+        if authorFirstName?.lowercased().contains(text.lowercased()) ?? false {
+            return true
+        }
+        
+        if authorLastName.lowercased().contains(text.lowercased()) {
             return true
         }
         
@@ -139,7 +143,15 @@ extension Array where Element == Book {
             }
             
             if searchText == "author" {
-                return self.filter({ $0.author.lowercased().contains(searchPhrase) })
+                return self.filter({
+                    if $0.authorLastName.lowercased().contains(searchPhrase) {
+                        return true
+                    }
+                    
+                    guard let firstName = $0.authorFirstName else { return false }
+                    
+                    return firstName.lowercased().contains(searchPhrase)
+                })
             }
             
             if searchText == "publisher" {
