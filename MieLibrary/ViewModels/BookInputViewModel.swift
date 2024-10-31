@@ -78,7 +78,7 @@ class BookInputViewModel {
             book.publisher = publisher.isEmpty ? nil : publisher
             book.publishedDate = publishedDate
             book.numberOfPages = Int(numberOfPages)
-            book.genre = genre.rawValue ?? book.genre
+            book.genre = genre.rawValue
             book.series = series.isEmpty ? nil : series
             book.seriesNumber = Int(seriesNumber)
             book.isbn = isbn.isEmpty ? nil : isbn

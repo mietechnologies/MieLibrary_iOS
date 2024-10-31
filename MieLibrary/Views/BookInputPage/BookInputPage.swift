@@ -31,95 +31,111 @@ struct BookInputPage: View {
                     .padding(.bottom, 8)
             }
             
-            ScrollView {
-                VStack(spacing: 16) {
-                    TitledTextField("Title", text: $vm.title, titleColor: (vm.showMissingFields && vm.title.isEmpty) ? .highlight : .text)
-                    
-                    TitledTextField("Subtitle", text: $vm.subtitle)
-                    
-                    TitledTextField("Author First Name", text: $vm.authorFirstName)
-                    
-                    TitledTextField("Author Last Name", text: $vm.authorLastName, titleColor: (vm.showMissingFields && vm.authorLastName.isEmpty) ? .highlight : .text)
-                    
-                    HStack(alignment: .center) {
-                        Text("Genre")
-                            .themeStyle(.subheader, fontColor: (vm.showMissingFields && vm.genre == nil) ? .highlight : .text)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 16) {
+                        if vm.showMissingFields {
+                            Text("Please fill in all the fields that are highlighted before continuing.")
+                                .themeStyle(.errorMessage)
+                                .padding()
+                                .background(RoundedRectangle(cornerRadius: 6).fill(Color.highlight))
+                                .id("error")
+                        }
                         
-                        Spacer()
+                        TitledTextField("Title", text: $vm.title, titleColor: (vm.showMissingFields && vm.title.isEmpty) ? .highlight : .text)
                         
-                        Menu {
-                            Picker("Genre", selection: $vm.genre) {
-                                ForEach(GenreType.allCases, id: \.self) { genre in
-                                    Text(genre.rawValue)
-                                        .themeStyle(.body)
-                                        .tag(genre)
+                        TitledTextField("Subtitle", text: $vm.subtitle)
+                        
+                        TitledTextField("Author First Name", text: $vm.authorFirstName)
+                        
+                        TitledTextField("Author Last Name", text: $vm.authorLastName, titleColor: (vm.showMissingFields && vm.authorLastName.isEmpty) ? .highlight : .text)
+                        
+                        HStack(alignment: .center) {
+                            Text("Genre")
+                                .themeStyle(.subheader, fontColor: (vm.showMissingFields && vm.genre == nil) ? .highlight : .text)
+                            
+                            Spacer()
+                            
+                            Menu {
+                                Picker("Genre", selection: $vm.genre) {
+                                    ForEach(GenreType.allCases, id: \.self) { genre in
+                                        Text(genre.rawValue)
+                                            .themeStyle(.body)
+                                            .tag(genre)
+                                    }
+                                }
+                            } label: {
+                                Text(vm.genre?.rawValue ?? "No Genre Selected")
+                                    .themeStyle(.body, fontColor: .accented)
+                            }
+                        }
+                        
+                        TitledTextField("Series", text: $vm.series)
+                        
+                        TitledTextField("# in Series", text: $vm.seriesNumber, titleType: .horizontal)
+                            .keyboardType(.numberPad)
+                        
+                        TitledTextField("# of Pages", text: $vm.numberOfPages, titleType: .horizontal)
+                            .keyboardType(.numberPad)
+                        
+                        TagsView {
+                            ForEach(vm.tags, id: \.self) { tag in
+                                let viewWidth = tag.size(.preferredFont(forTextStyle: .body)).width + 24
+                                
+                                Text(tag)
+                                    .padding(.vertical, 6)
+                                    .padding(.horizontal, 12)
+                                    .background(Color.tertiary, in: Capsule())
+                                    .containerValue(\.viewWidth, viewWidth)
+                                    .onTapGesture {
+                                        vm.removeTag(tag)
+                                    }
+                            }
+                        }
+                        
+                        TitledTextField("Add Tag", text: $vm.inputTag) {
+                            vm.addTag()
+                        }
+                        
+                        TitledTextField("Publisher", text: $vm.publisher)
+                        
+                        DatePicker("Published Date", selection: Binding<Date>(get: {vm.publishedDate ?? Date()}, set: {vm.publishedDate = $0}), displayedComponents: .date)
+                            .themeStyle(.subheader)
+                            .padding(.vertical, 8)
+                        
+                        TitledTextField("ISBN", text: $vm.isbn)
+                        
+                        Button {
+                            if vm.book != nil {
+                                vm.updateBook()
+                            }
+                            
+                            if let addBook, let book = vm.constructBook() {
+                                addBook(book)
+                            }
+                            
+                            if !vm.showMissingFields {
+                                dismiss()
+                            } else {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                                    withAnimation(.easeInOut) {
+                                        proxy.scrollTo("error", anchor: .top)
+                                    }
                                 }
                             }
                         } label: {
-                            Text(vm.genre?.rawValue ?? "No Genre Selected")
-                                .themeStyle(.body, fontColor: .accented)
+                            Text(vm.book != nil ? "Save" : "Add")
+                                .themeStyle(.button)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 48)
                         }
-                    }
-                    
-                    TitledTextField("Series", text: $vm.series)
-                    
-                    TitledTextField("# in Series", text: $vm.seriesNumber, titleType: .horizontal)
-                        .keyboardType(.numberPad)
-                    
-                    TitledTextField("# of Pages", text: $vm.numberOfPages, titleType: .horizontal)
-                        .keyboardType(.numberPad)
-                    
-                    TagsView {
-                        ForEach(vm.tags, id: \.self) { tag in
-                            let viewWidth = tag.size(.preferredFont(forTextStyle: .body)).width + 24
-                            
-                            Text(tag)
-                                .padding(.vertical, 6)
-                                .padding(.horizontal, 12)
-                                .background(Color.tertiary, in: Capsule())
-                                .containerValue(\.viewWidth, viewWidth)
-                                .onTapGesture {
-                                    vm.removeTag(tag)
-                                }
-                        }
-                    }
-                    
-                    TitledTextField("Add Tag", text: $vm.inputTag) {
-                        vm.addTag()
-                    }
-                    
-                    TitledTextField("Publisher", text: $vm.publisher)
-                    
-                    DatePicker("Published Date", selection: Binding<Date>(get: {vm.publishedDate ?? Date()}, set: {vm.publishedDate = $0}), displayedComponents: .date)
-                        .themeStyle(.subheader)
-                        .padding(.vertical, 8)
-                    
-                    TitledTextField("ISBN", text: $vm.isbn)
-                    
-                    Button {
-                        if vm.book != nil {
-                            vm.updateBook()
-                        }
+                        .background(Color.accented, in: RoundedRectangle(cornerRadius: 8))
+                        .padding(.top, 24)
+                        .padding(.bottom, 32)
                         
-                        if let addBook, let book = vm.constructBook() {
-                            addBook(book)
-                        }
-                        
-                        if !vm.showMissingFields {
-                            dismiss()
-                        }
-                    } label: {
-                        Text(vm.book != nil ? "Save" : "Add")
-                            .themeStyle(.button)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 48)
                     }
-                    .background(Color.accented, in: RoundedRectangle(cornerRadius: 8))
-                    .padding(.top, 24)
-                    .padding(.bottom, 32)
-                    
+                    .padding(.all)
                 }
-                .padding(.all)
             }
             .scrollIndicators(.hidden)
             
