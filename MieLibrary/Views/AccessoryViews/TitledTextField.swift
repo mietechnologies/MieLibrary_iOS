@@ -11,12 +11,14 @@ struct TitledTextField: View {
     
     var title: String
     var type: TitleType
+    var titleColor: Color
     @Binding var text: String
     var onDone: (() -> Void)?
     
-    init(_ title: String, text: Binding<String>, titleType: TitleType = .vertical, onDone: (() -> Void)? = nil) {
+    init(_ title: String, text: Binding<String>, titleType: TitleType = .vertical, titleColor: Color = .text, onDone: (() -> Void)? = nil) {
         self.title = title
         self.type = titleType
+        self.titleColor = titleColor
         self._text = text
         self.onDone = onDone
     }
@@ -32,7 +34,7 @@ struct TitledTextField: View {
     private func VerticalLook() -> some View {
         VStack(alignment: .leading) {
             Text(title)
-                .themeStyle(.subheader)
+                .themeStyle(.subheader, fontColor: titleColor)
             
             TextField("", text: $text)
                 .themeStyle(.body)
@@ -48,7 +50,7 @@ struct TitledTextField: View {
     private func HorizontalLook() -> some View {
         HStack(alignment: .center) {
             Text(title)
-                .themeStyle(.subheader)
+                .themeStyle(.subheader, fontColor: titleColor)
             
             Spacer()
             

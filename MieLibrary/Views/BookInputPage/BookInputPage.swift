@@ -33,17 +33,17 @@ struct BookInputPage: View {
             
             ScrollView {
                 VStack(spacing: 16) {
-                    TitledTextField("Title", text: $vm.title)
+                    TitledTextField("Title", text: $vm.title, titleColor: (vm.showMissingFields && vm.title.isEmpty) ? .highlight : .text)
                     
                     TitledTextField("Subtitle", text: $vm.subtitle)
                     
                     TitledTextField("Author First Name", text: $vm.authorFirstName)
                     
-                    TitledTextField("Author Last Name", text: $vm.authorLastName)
+                    TitledTextField("Author Last Name", text: $vm.authorLastName, titleColor: (vm.showMissingFields && vm.authorLastName.isEmpty) ? .highlight : .text)
                     
                     HStack(alignment: .center) {
                         Text("Genre")
-                            .themeStyle(.subheader)
+                            .themeStyle(.subheader, fontColor: (vm.showMissingFields && vm.genre == nil) ? .highlight : .text)
                         
                         Spacer()
                         
@@ -63,10 +63,10 @@ struct BookInputPage: View {
                     
                     TitledTextField("Series", text: $vm.series)
                     
-                    TitledTextField("# in Series", text: $vm.seriesNumberRaw, titleType: .horizontal)
+                    TitledTextField("# in Series", text: $vm.seriesNumber, titleType: .horizontal)
                         .keyboardType(.numberPad)
                     
-                    TitledTextField("# of Pages", text: $vm.numberOfPagesRaw, titleType: .horizontal)
+                    TitledTextField("# of Pages", text: $vm.numberOfPages, titleType: .horizontal)
                         .keyboardType(.numberPad)
                     
                     TagsView {
@@ -100,10 +100,14 @@ struct BookInputPage: View {
                         if vm.book != nil {
                             vm.updateBook()
                         }
+                        
                         if let addBook, let book = vm.constructBook() {
                             addBook(book)
                         }
-                        dismiss()
+                        
+                        if !vm.showMissingFields {
+                            dismiss()
+                        }
                     } label: {
                         Text(vm.book != nil ? "Save" : "Add")
                             .themeStyle(.button)
