@@ -30,6 +30,7 @@ struct TextModifier: ViewModifier {
         case .info:             return 20
         case .sectionHeader:    return 24
         case .button:           return 20
+        case .errorMessage:     return 14
         }
     }
     
@@ -65,15 +66,17 @@ extension TextModifier {
         case info
         case sectionHeader
         case button
+        case errorMessage
         
         func font(size: CGFloat) -> Font {
             switch self {
-            case .header:           return .system(size: size, weight: .black, design: .default)
-            case .subheader:        return .system(size: size, weight: .heavy, design: .default)
-            case .body:             return .system(size: size, weight: .regular, design: .default)
-            case .info:             return .system(size: size, weight: .light, design: .default)
-            case .sectionHeader:    return .system(size: size, weight: .heavy, design: .default)
-            case .button:           return .system(size: size, weight: .semibold, design: .default)
+            case .header:           return .system(size: size, weight: .black)
+            case .subheader:        return .system(size: size, weight: .heavy)
+            case .body:             return .system(size: size, weight: .regular)
+            case .info:             return .system(size: size, weight: .light)
+            case .sectionHeader:    return .system(size: size, weight: .heavy)
+            case .button:           return .system(size: size, weight: .semibold)
+            case .errorMessage:     return .system(size: size, weight: .light)
             }
         }
     }

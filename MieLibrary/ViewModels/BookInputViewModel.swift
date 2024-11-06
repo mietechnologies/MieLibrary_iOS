@@ -13,70 +13,84 @@ class BookInputViewModel {
     
     var title: String = ""
     var subtitle: String = ""
-    var author: String = ""
+    var authorFirstName: String = ""
+    var authorLastName: String = ""
     var publisher: String = ""
-    var publishedDate: Date = .init()
-    var numberOfPagesRaw: String = ""
+    var publishedDate: Date
+    var numberOfPages: String = ""
     var genre: GenreType? = nil
     var series: String = ""
-    var seriesNumberRaw: String = ""
+    var seriesNumber: String = ""
     var isbn: String = ""
     var inputTag: String = ""
+    var showMissingFields: Bool = false
+    private let publishedDateDefaultValue: Date
     
     var tags: [String] = []
-    private var numberOfPages: Int? {
-        Int(numberOfPagesRaw)
-    }
-    private var seriesNumber: Int? {
-        Int(seriesNumberRaw)
-    }
     
     init(book: Book? = nil) {
         self.book = book
+        publishedDateDefaultValue = Date()
         
         _title = book?.title ?? ""
         _subtitle = book?.subTitle ?? ""
-        _author = book?.author ?? ""
+        _authorFirstName = book?.authorFirstName ?? ""
+        _authorLastName = book?.authorLastName ?? ""
         _publisher = book?.publisher ?? ""
-        _publishedDate = book?.publishedDate ?? .init()
-        _numberOfPagesRaw = book?.numberOfPages == nil ? "" : String(book!.numberOfPages!)
-        _genre = GenreType(rawValue: book?.genre ?? "Adventure")
+        _publishedDate = book?.publishedDate ?? publishedDateDefaultValue
+        _numberOfPages = book?.numberOfPages == nil ? "" : String(book!.numberOfPages!)
+        if let genre = book?.genre {
+            _genre = GenreType(rawValue: genre)
+        }
         _series = book?.series ?? ""
-        _seriesNumberRaw = book?.seriesNumber == nil ? "" : String(book!.seriesNumber!)
+        _seriesNumber = book?.seriesNumber == nil ? "" : String(book!.seriesNumber!)
         _isbn = book?.isbn ?? ""
         _tags = book?.tags ?? []
     }
     
-    func addedBook() -> Book {
-        return .init(
-            title: title,
-            subTitle: subtitle.isEmpty ? nil : subtitle,
-            author: author,
-            publisher: publisher.isEmpty ? nil : publisher,
-            publishedDate: publishedDate,
-            numberOfPages: numberOfPages == 0 ? nil : numberOfPages,
-            genre: genre!,
-            series: series.isEmpty ? nil : series,
-            seriesNumber: seriesNumber == 0 ? nil : seriesNumber,
-            isbn: isbn.isEmpty ? nil : isbn,
-            bookCover: nil, // TODO: Implement logic for saving the bookCover in the cache and create a URL string
-            tags: tags
-        )
+    func constructBook() -> Book? {
+        if let genre, !title.isEmpty, !authorLastName.isEmpty {
+            showMissingFields = false
+            
+            return .init(
+                title: title,
+                subTitle: subtitle,
+                authorFirstName: authorFirstName,
+                authorLastName: authorLastName,
+                publisher: publisher,
+                publishedDate: publishedDate == publishedDateDefaultValue ? nil : publishedDate,
+                numberOfPages: Int(numberOfPages),
+                genre: genre,
+                series: series,
+                seriesNumber: Int(seriesNumber),
+                isbn: isbn,
+                bookCover: nil, // TODO: Implement logic for saving the bookCover in the cache and create a URL string
+                tags: tags
+            )
+        }
+        
+        showMissingFields = true
+        return nil
     }
     
     func updateBook() {
-        if let book {
+        if let book, let genre, !title.isEmpty, !authorLastName.isEmpty {
             book.title = title
             book.subTitle = subtitle.isEmpty ? nil : subtitle
-            book.author = author
+            book.authorFirstName = authorFirstName.isEmpty ? nil : authorFirstName
+            book.authorLastName = authorLastName
             book.publisher = publisher.isEmpty ? nil : publisher
             book.publishedDate = publishedDate
-            book.numberOfPages = numberOfPages
-            book.genre = genre?.rawValue ?? book.genre
+            book.numberOfPages = Int(numberOfPages)
+            book.genre = genre.rawValue
             book.series = series.isEmpty ? nil : series
-            book.seriesNumber = seriesNumber
+            book.seriesNumber = Int(seriesNumber)
             book.isbn = isbn.isEmpty ? nil : isbn
             book.tags = tags
+            
+            showMissingFields = false
+        } else {
+            showMissingFields = true
         }
     }
     

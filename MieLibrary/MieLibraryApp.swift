@@ -26,6 +26,12 @@ struct MieLibraryApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onAppear {
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let window = windowScene.windows.first {
+                        window.backgroundColor = .accented
+                    }
+                }
         }
         .modelContainer(sharedModelContainer)
     }

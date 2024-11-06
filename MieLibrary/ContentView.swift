@@ -41,6 +41,7 @@ struct ContentView: View {
                 LibraryPage(sorting: $appSettings.sortMethod, order: $appSettings.sortOrder, addBook: { book in
                     modelContext.insert(book)
                 })
+                .modelContext(modelContext)
             }
             
             Tab("Settings", systemImage: "gear") {

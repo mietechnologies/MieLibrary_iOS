@@ -9,11 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct LibraryPage: View {
+    @Environment(\.modelContext) private var modelContext
     
     @Query private var books: [Book]
     var addBook: ((Book) -> Void)
     
     @State private var showSortPage: Bool = false
+    @State private var addBookManually: Bool = false
     @State private var searchText: String = ""
     @Binding var sorting: SortingCategory
     @Binding var sortDirection: SortOrder
@@ -67,28 +69,22 @@ struct LibraryPage: View {
                 }
                 
                 ToolbarItem {
-                    Button {
-                        addBook(
-                            Book(
-                                title: "Lord of the Rings",
-                                subTitle: "Fellowship of the Rings",
-                                author: "J.R.R Tolkein",
-                                publisher: "Houghton Miffin",
-                                publishedDate: .init(),
-                                numberOfPages: 423,
-                                genre: .fantasy(.high),
-                                series: "Lord of the Rings",
-                                seriesNumber: 1,
-                                isbn: "1234567890",
-                                bookCover: "Fellowship",
-                                tags: ["frodo", "tolkein", "middle-earth"])
-                        )
-                    } label: {
-                        Image(systemName: "plus")
-                            .foregroundStyle(Color.text)
-                            .accessibilityLabel("Add Item")
+                    Menu("Add Book", systemImage: "plus") {
+                        Button {
+                            addBookManually.toggle()
+                        } label: {
+                            Label("Add Manually", systemImage: "text.book.closed.fill")
+                        }
+                        
+                        Button {
+                            print("Scan Barcode")
+                        } label: {
+                            Label("Scan Barcode", systemImage: "barcode.viewfinder")
+                        }
                     }
+                    .foregroundStyle(Color.text)
                 }
+                
             }
             .navigationDestination(for: Book.self) { book in
                 BookDetailsPage(book: book) { searchTerm in
@@ -97,9 +93,13 @@ struct LibraryPage: View {
             }
             .sheet(isPresented: $showSortPage) {
                 SortPage(selection: $sorting, order: $sortDirection)
-//                    .presentationDetents([.fraction(0.7)])
                     .presentationDetents([.fraction(0.7)])
                     .presentationDragIndicator(.visible)
+            }
+            .sheet(isPresented: $addBookManually) {
+                BookInputPage { book in
+                    modelContext.insert(book)
+                }
             }
         }
         .tint(.text)

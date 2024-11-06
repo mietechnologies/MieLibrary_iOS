@@ -16,7 +16,8 @@ final class Book: Identifiable {
     }
     var title: String
     var subTitle: String?
-    var author: String
+    var authorFirstName: String?
+    var authorLastName: String
     var publisher: String?
     var publishedDate: Date?
     var numberOfPages: Int?
@@ -32,6 +33,11 @@ final class Book: Identifiable {
     var fullTitle: String {
         guard let subTitle else { return title }
         return "\(title): \(subTitle)"
+    }
+    
+    var authorName: String {
+        guard let firstName = authorFirstName else { return "\(authorLastName)" }
+        return "\(firstName) \(authorLastName)"
     }
     
     var publishedDateString: String? {
@@ -55,7 +61,8 @@ final class Book: Identifiable {
     init(
         title: String,
         subTitle: String? = nil,
-        author: String,
+        authorFirstName: String? = nil,
+        authorLastName: String,
         publisher: String? = nil,
         publishedDate: Date? = nil,
         numberOfPages: Int? = nil,
@@ -69,19 +76,38 @@ final class Book: Identifiable {
         isFavorite: Bool = false
     ) {
         self.title = title
-        self.subTitle = subTitle
-        self.author = author
-        self.publisher = publisher
-        self.publishedDate = publishedDate
-        self.numberOfPages = numberOfPages
+        self.authorLastName = authorLastName
         self.genre = genre.rawValue
-        self.series = series
-        self.seriesNumber = seriesNumber
-        self.isbn = isbn
-        self.bookCover = bookCover
         self.tags = tags
         self.dateAdded = dateAdded
         self.isFavorite = isFavorite
+        self.numberOfPages = numberOfPages
+        self.seriesNumber = seriesNumber
+        
+        if let authorFirstName {
+            self.authorFirstName = authorFirstName.isEmpty ? nil : authorFirstName
+        }
+        
+        if let subTitle {
+            self.subTitle = subTitle.isEmpty ? nil : subTitle
+        }
+        
+        if let publisher {
+            self.publisher = publisher.isEmpty ? nil : publisher
+        }
+        
+        if let publishedDate {
+            self.publishedDate = publishedDate
+        }
+        
+        if let series {
+            self.series = series.isEmpty ? nil : series
+        }
+        
+        if let isbn {
+            self.isbn = isbn.isEmpty ? nil : isbn
+        }
+        self.bookCover = bookCover
     }
     
     public func search(with text: String) -> Bool {
@@ -93,7 +119,11 @@ final class Book: Identifiable {
             return true
         }
         
-        if author.lowercased().contains(text.lowercased()) {
+        if authorFirstName?.lowercased().contains(text.lowercased()) ?? false {
+            return true
+        }
+        
+        if authorLastName.lowercased().contains(text.lowercased()) {
             return true
         }
         
@@ -118,7 +148,15 @@ extension Array where Element == Book {
             }
             
             if searchText == "author" {
-                return self.filter({ $0.author.lowercased().contains(searchPhrase) })
+                return self.filter({
+                    if $0.authorLastName.lowercased().contains(searchPhrase) {
+                        return true
+                    }
+                    
+                    guard let firstName = $0.authorFirstName else { return false }
+                    
+                    return firstName.lowercased().contains(searchPhrase)
+                })
             }
             
             if searchText == "publisher" {
