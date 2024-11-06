@@ -16,7 +16,7 @@ class BookInputViewModel {
     var authorFirstName: String = ""
     var authorLastName: String = ""
     var publisher: String = ""
-    var publishedDate: Date? = nil
+    var publishedDate: Date
     var numberOfPages: String = ""
     var genre: GenreType? = nil
     var series: String = ""
@@ -24,18 +24,20 @@ class BookInputViewModel {
     var isbn: String = ""
     var inputTag: String = ""
     var showMissingFields: Bool = false
+    private let publishedDateDefaultValue: Date
     
     var tags: [String] = []
     
     init(book: Book? = nil) {
         self.book = book
+        publishedDateDefaultValue = Date()
         
         _title = book?.title ?? ""
         _subtitle = book?.subTitle ?? ""
         _authorFirstName = book?.authorFirstName ?? ""
         _authorLastName = book?.authorLastName ?? ""
         _publisher = book?.publisher ?? ""
-        _publishedDate = book?.publishedDate ?? .init()
+        _publishedDate = book?.publishedDate ?? publishedDateDefaultValue
         _numberOfPages = book?.numberOfPages == nil ? "" : String(book!.numberOfPages!)
         if let genre = book?.genre {
             _genre = GenreType(rawValue: genre)
@@ -48,13 +50,15 @@ class BookInputViewModel {
     
     func constructBook() -> Book? {
         if let genre, !title.isEmpty, !authorLastName.isEmpty {
+            showMissingFields = false
+            
             return .init(
                 title: title,
                 subTitle: subtitle,
                 authorFirstName: authorFirstName,
                 authorLastName: authorLastName,
                 publisher: publisher,
-                publishedDate: publishedDate,
+                publishedDate: publishedDate == publishedDateDefaultValue ? nil : publishedDate,
                 numberOfPages: Int(numberOfPages),
                 genre: genre,
                 series: series,
@@ -83,9 +87,11 @@ class BookInputViewModel {
             book.seriesNumber = Int(seriesNumber)
             book.isbn = isbn.isEmpty ? nil : isbn
             book.tags = tags
+            
+            showMissingFields = false
+        } else {
+            showMissingFields = true
         }
-        
-        showMissingFields = true
     }
     
     func removeTag(_ tag: String) {

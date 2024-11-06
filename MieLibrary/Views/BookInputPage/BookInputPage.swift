@@ -37,7 +37,8 @@ struct BookInputPage: View {
                         if vm.showMissingFields {
                             Text("Please fill in all the fields that are highlighted before continuing.")
                                 .themeStyle(.errorMessage)
-                                .padding()
+                                .padding(.horizontal)
+                                .padding(.vertical, 5)
                                 .background(RoundedRectangle(cornerRadius: 6).fill(Color.highlight))
                                 .id("error")
                         }
@@ -99,7 +100,7 @@ struct BookInputPage: View {
                         
                         TitledTextField("Publisher", text: $vm.publisher)
                         
-                        DatePicker("Published Date", selection: Binding<Date>(get: {vm.publishedDate ?? Date()}, set: {vm.publishedDate = $0}), displayedComponents: .date)
+                        DatePicker("Published Date", selection: $vm.publishedDate, displayedComponents: .date)
                             .themeStyle(.subheader)
                             .padding(.vertical, 8)
                         
@@ -117,7 +118,7 @@ struct BookInputPage: View {
                             if !vm.showMissingFields {
                                 dismiss()
                             } else {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01){
                                     withAnimation(.easeInOut) {
                                         proxy.scrollTo("error", anchor: .top)
                                     }
