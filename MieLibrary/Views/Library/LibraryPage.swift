@@ -17,6 +17,8 @@ struct LibraryPage: View {
     @State private var showSortPage: Bool = false
     @State private var addBookManually: Bool = false
     @State private var searchText: String = ""
+    @State private var presentInputAlert: Bool = false
+    @State private var isbnInput: String = ""
     @Binding var sorting: SortingCategory
     @Binding var sortDirection: SortOrder
     
@@ -77,7 +79,7 @@ struct LibraryPage: View {
                         }
                         
                         Button {
-                            print("Scan Barcode")
+                            presentInputAlert.toggle()
                         } label: {
                             Label("Scan Barcode", systemImage: "barcode.viewfinder")
                         }
@@ -101,6 +103,19 @@ struct LibraryPage: View {
                     modelContext.insert(book)
                 }
             }
+            .alert("Input ISBN", isPresented: $presentInputAlert, actions: {
+                
+                TextField("ISBN #", text: $isbnInput)
+                
+                Button {
+                    print("Search")
+                } label: {
+                    Text("Search")
+                }
+            }, message: {
+                Text("Please input the book's ISBN:")
+            })
+
         }
         .tint(.text)
     }
